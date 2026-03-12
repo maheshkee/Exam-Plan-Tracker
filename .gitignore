@@ -5,5 +5,4 @@ venv/
 .venv/
 *.pyc
 .DS_Store
-alembic/versions/*.py
 !alembic/versions/.gitkeep
