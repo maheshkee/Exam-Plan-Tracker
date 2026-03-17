@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exam Setup - Exam Plan Tracker</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="brand">📚 Exam Plan Tracker</div>
+    <div>
+      <a href="#" onclick="logout()">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div id="setup-card" class="card">
+      <h2>Set Up Your Exam</h2>
+      <p style="margin-bottom: 20px; color: #6b7280;">Choose your target exam and daily study hours to generate your plan.</p>
+      
+      <form id="setup-form">
+        <label for="exam-select">Choose Exam</label>
+        <select id="exam-select" required>
+          <option value="" disabled selected>Select an exam...</option>
+        </select>
+
+        <div id="syllabus-info" class="hidden" style="margin-bottom: 16px; padding: 12px; background: #f9fafb; border-radius: 6px; font-size: 14px;">
+          <!-- Populated via JS -->
+        </div>
+
+        <label for="exam-date">Target Exam Date</label>
+        <input type="date" id="exam-date" required>
+
+        <label for="study-hours">Study Hours Per Day (1-16)</label>
+        <input type="number" id="study-hours" min="1" max="16" value="4" required>
+
+        <div id="error-msg" class="error hidden" style="margin-bottom: 12px;"></div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Generate My Plan</button>
+      </form>
+    </div>
+
+    <div id="result-card" class="card hidden">
+      <h2 style="color: #16a34a;">Plan Generated! 🎉</h2>
+      <div id="plan-summary" style="margin-bottom: 24px;">
+        <!-- Populated via JS -->
+      </div>
+      <button onclick="window.location.href='dashboard.html'" class="btn btn-primary" style="width: 100%;">Go to Dashboard</button>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/setup.js"></script>
+</body>
+</html>
