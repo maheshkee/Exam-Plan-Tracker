@@ -31,3 +31,13 @@ def get_history(
     current_user: User = Depends(get_current_user)
 ):
     return progress_service.get_progress_history(db, current_user.id)
+
+@router.post("/trigger-reminders", tags=["progress"])
+def trigger_reminders(current_user: User = Depends(get_current_user)):
+    """
+    Manually trigger the reminder check.
+    Used for testing — in production this runs on schedule.
+    """
+    from app.services.notification_service import send_reminders_for_all_users
+    send_reminders_for_all_users()
+    return {"message": "Reminder check completed"}
