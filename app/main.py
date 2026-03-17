@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routers import auth as auth_router
 from app.routers import exam as exam_router
 from app.routers import task as task_router
+from app.routers import progress as progress_router
 
 app = FastAPI(title="exam-plan-tracker")
 
@@ -17,6 +18,7 @@ app.add_middleware(
 app.include_router(auth_router.router)
 app.include_router(exam_router.router)
 app.include_router(task_router.router)
+app.include_router(progress_router.router)
 
 @app.get("/health")
 def health_check():
