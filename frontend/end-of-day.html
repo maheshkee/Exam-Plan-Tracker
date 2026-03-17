@@ -1,1 +1,82 @@
-<!DOCTYPE html><html><head><meta charset='UTF-8'><title>end-of-day</title><link rel='stylesheet' href='css/style.css'></head><body><nav class='nav'><div class='brand'>📚 Exam Plan Tracker</div><div><a href='dashboard.html'>Dashboard</a><a href='tasks.html'>Tasks</a><a href='history.html'>History</a><a href='#' onclick='logout()'>Logout</a></div></nav><div class='container'><h1>End-of-day</h1><p>Coming soon</p></div><script src='js/api.js'></script><script src='js/end-of-day.js'></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>End of Day - Exam Plan Tracker</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="brand">📚 Exam Plan Tracker</div>
+    <div>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="tasks.html">Tasks</a>
+      <a href="history.html">History</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>End of Day Summary</h1>
+    <p style="margin-bottom: 24px; color: #4b5563;">Finalize your study day to update your progress snapshot and pace.</p>
+
+    <div class="card" style="display: flex; gap: 12px; align-items: flex-end;">
+      <div style="flex: 1;">
+        <label for="target-date">Select Date:</label>
+        <input type="date" id="target-date" style="margin-bottom: 0;">
+      </div>
+      <button id="generate-btn" class="btn btn-primary">Generate Summary</button>
+    </div>
+
+    <div id="error-msg" class="error hidden" style="margin-bottom: 16px;"></div>
+
+    <div id="result-card" class="card hidden">
+      <h2 id="result-title">Summary for --</h2>
+      
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div id="planned-tasks" class="value">--</div>
+          <div class="label">Planned</div>
+        </div>
+        <div class="stat-box">
+          <div id="completed-tasks" class="value">--</div>
+          <div class="label">Completed</div>
+        </div>
+        <div class="stat-box">
+          <div id="skipped-tasks" class="value">--</div>
+          <div class="label">Skipped</div>
+        </div>
+        <div class="stat-box">
+          <div id="pending-tasks" class="value">--</div>
+          <div class="label">Pending</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 24px; padding: 16px; background: #f9fafb; border-radius: 8px;">
+        <div style="display: flex; justify-content: space-around; text-align: center;">
+          <div>
+            <div id="hours-planned" style="font-size: 18px; font-weight: 700; color: #374151;">--h</div>
+            <div style="font-size: 12px; color: #6b7280;">Hours Planned</div>
+          </div>
+          <div style="border-left: 1px solid #e5e7eb;"></div>
+          <div>
+            <div id="hours-completed" style="font-size: 18px; font-weight: 700; color: #4f46e5;">--h</div>
+            <div style="font-size: 12px; color: #6b7280;">Hours Completed</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: center; gap: 12px; margin-bottom: 24px;">
+        <div id="day-status" class="badge">--</div>
+        <div id="pace-status" class="badge">--</div>
+      </div>
+
+      <button onclick="window.location.href='history.html'" class="btn btn-secondary" style="width: 100%;">View Full History</button>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/end-of-day.js"></script>
+</body>
+</html>

@@ -1,1 +1,61 @@
-<!DOCTYPE html><html><head><meta charset='UTF-8'><title>history</title><link rel='stylesheet' href='css/style.css'></head><body><nav class='nav'><div class='brand'>📚 Exam Plan Tracker</div><div><a href='dashboard.html'>Dashboard</a><a href='tasks.html'>Tasks</a><a href='history.html'>History</a><a href='#' onclick='logout()'>Logout</a></div></nav><div class='container'><h1>History</h1><p>Coming soon</p></div><script src='js/api.js'></script><script src='js/history.js'></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progress History - Exam Plan Tracker</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="brand">📚 Exam Plan Tracker</div>
+    <div>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="tasks.html">Tasks</a>
+      <a href="history.html">History</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>Progress History</h1>
+
+    <div class="stat-grid">
+      <div class="stat-box">
+        <div id="total-days" class="value">--</div>
+        <div class="label">Days Tracked</div>
+      </div>
+      <div class="stat-box">
+        <div id="streak-count" class="value">--</div>
+        <div class="label">"Ahead" Days</div>
+      </div>
+    </div>
+
+    <div id="error-msg" class="error hidden" style="margin-bottom: 16px;"></div>
+
+    <div class="card">
+      <div id="no-history" class="hidden" style="text-align: center; padding: 40px; color: #6b7280;">
+        No history yet. Complete a day to see it here.
+      </div>
+      <div id="history-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Topics Done</th>
+              <th>Hours Done</th>
+              <th>Pace Status</th>
+            </tr>
+          </thead>
+          <tbody id="history-list-body">
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/history.js"></script>
+</body>
+</html>
