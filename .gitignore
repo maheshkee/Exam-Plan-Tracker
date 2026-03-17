@@ -7,3 +7,4 @@ venv/
 .DS_Store
 !alembic/versions/.gitkeep
 server.log
+test.db
