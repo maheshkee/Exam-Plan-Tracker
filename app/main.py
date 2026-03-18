@@ -10,6 +10,27 @@ print("🔥 MAIN FILE LOADED")
 
 app = FastAPI(title="exam-plan-tracker")
 
+
+def seed_exams():
+    from app.database import SessionLocal
+    from app.models.exam import Exam
+
+    db = SessionLocal()
+    try:
+        if db.query(Exam).count() == 0:
+            db.add_all(
+                [
+                    Exam(name="UPSC"),
+                    Exam(name="JEE"),
+                    Exam(name="GATE"),
+                    Exam(name="NEET"),
+                ]
+            )
+            db.commit()
+            print("✅ Exams seeded")
+    finally:
+        db.close()
+
 @app.on_event("startup")
 def startup_event():
     print("🚀 Startup running...")
@@ -29,6 +50,7 @@ def startup_event():
 
         Base.metadata.create_all(bind=engine)
         print("✅ Tables created")
+        seed_exams()
         start_scheduler()
     except Exception as e:
         print("DB INIT ERROR:", e)
