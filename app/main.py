@@ -19,6 +19,7 @@ app = FastAPI(title="exam-plan-tracker", lifespan=lifespan)
 @app.on_event("startup")
 def startup():
     try:
+        import app.models
         from app.database import Base, engine
 
         Base.metadata.create_all(bind=engine)

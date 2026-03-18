@@ -43,7 +43,20 @@ async function apiFetch(path, options = {}) {
     return;
   }
 
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.detail || "Request failed");
+  const text = await res.text();
+  let data = null;
+
+  if (text) {
+    try {
+      data = JSON.parse(text);
+    } catch {
+      if (!res.ok) {
+        throw new Error(text);
+      }
+      throw new Error("Invalid JSON response from server");
+    }
+  }
+
+  if (!res.ok) throw new Error(data?.detail || text || "Request failed");
   return data;
 }
