@@ -2,7 +2,6 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from app.database import Base, engine
 from app.routers import auth as auth_router
 from app.routers import exam as exam_router
 from app.routers import task as task_router
@@ -17,7 +16,15 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="exam-plan-tracker", lifespan=lifespan)
 
-Base.metadata.create_all(bind=engine)
+@app.on_event("startup")
+def startup():
+    try:
+        from app.database import Base, engine
+
+        Base.metadata.create_all(bind=engine)
+        print("Tables created successfully")
+    except Exception as e:
+        print("DB INIT ERROR:", e)
 
 app.add_middleware(
     CORSMiddleware,
