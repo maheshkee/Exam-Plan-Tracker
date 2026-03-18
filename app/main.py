@@ -12,15 +12,23 @@ app = FastAPI(title="exam-plan-tracker")
 
 @app.on_event("startup")
 def startup_event():
-    print("🔥 STARTUP EVENT RUNNING")
+    print("🚀 Startup running...")
     try:
         from app.database import Base, engine
         import app.models
-        from app.models import user
+        from app.models.user import User
+        from app.models.exam import Exam
+        from app.models.subject import Subject
+        from app.models.topic import Topic
+        from app.models.user_exam import UserExam
+        from app.models.daily_task import DailyTask
+        from app.models.task_log import TaskLog
+        from app.models.progress_snapshot import ProgressSnapshot
+        from app.models.notification_log import NotificationLog
         from app.scheduler import start_scheduler
 
         Base.metadata.create_all(bind=engine)
-        print("Tables created successfully")
+        print("✅ Tables created")
         start_scheduler()
     except Exception as e:
         print("DB INIT ERROR:", e)
