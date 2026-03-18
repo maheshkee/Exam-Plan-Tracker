@@ -1,7 +1,8 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from app.routers import auth as auth_router
 from app.routers import exam as exam_router
 from app.routers import task as task_router
@@ -29,13 +30,35 @@ app.include_router(exam_router.router)
 app.include_router(task_router.router)
 app.include_router(progress_router.router)
 
-@app.get("/", response_class=HTMLResponse)
-def root():
-    return """
-    <h1>Exam Plan Tracker 🚀</h1>
-    <p>Backend is running successfully.</p>
-    <a href="/docs">Go to API Docs</a>
-    """
+app.mount("/static", StaticFiles(directory="frontend"), name="static")
+
+@app.get("/")
+def serve_frontend():
+    return FileResponse("frontend/index.html")
+
+@app.get("/index.html")
+def serve_index():
+    return FileResponse("frontend/index.html")
+
+@app.get("/dashboard.html")
+def serve_dashboard():
+    return FileResponse("frontend/dashboard.html")
+
+@app.get("/setup.html")
+def serve_setup():
+    return FileResponse("frontend/setup.html")
+
+@app.get("/tasks.html")
+def serve_tasks():
+    return FileResponse("frontend/tasks.html")
+
+@app.get("/history.html")
+def serve_history():
+    return FileResponse("frontend/history.html")
+
+@app.get("/end-of-day.html")
+def serve_end_of_day():
+    return FileResponse("frontend/end-of-day.html")
 
 @app.get("/health")
 def health_check():
