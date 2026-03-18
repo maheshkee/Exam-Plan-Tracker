@@ -1,4 +1,3 @@
-from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -6,27 +5,31 @@ from app.routers import auth as auth_router
 from app.routers import exam as exam_router
 from app.routers import task as task_router
 from app.routers import progress as progress_router
-from app.scheduler import start_scheduler, stop_scheduler
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    start_scheduler()
-    yield
-    stop_scheduler()
+print("🔥 MAIN FILE LOADED")
 
-app = FastAPI(title="exam-plan-tracker", lifespan=lifespan)
+app = FastAPI(title="exam-plan-tracker")
 
 @app.on_event("startup")
-def startup():
+def startup_event():
+    print("🔥 STARTUP EVENT RUNNING")
     try:
         from app.database import Base, engine
         import app.models
         from app.models import user
+        from app.scheduler import start_scheduler
 
         Base.metadata.create_all(bind=engine)
         print("Tables created successfully")
+        start_scheduler()
     except Exception as e:
         print("DB INIT ERROR:", e)
+
+@app.on_event("shutdown")
+def shutdown_event():
+    from app.scheduler import stop_scheduler
+
+    stop_scheduler()
 
 app.add_middleware(
     CORSMiddleware,
