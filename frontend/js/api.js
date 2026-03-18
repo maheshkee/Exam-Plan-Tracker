@@ -1,4 +1,4 @@
-const API = window.location.origin;
+const API = "https://exam-plan-tracker.onrender.com"; 
 
 function getToken() {
   return localStorage.getItem("token");
