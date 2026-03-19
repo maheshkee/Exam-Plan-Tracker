@@ -53,7 +53,7 @@ export default function HistoryPage() {
       const historyData = await getHistory();
       setHistory(historyData || []);
     } catch (err) {
-      setError(err.message || "Failed to load history");
+      setError(typeof err === "string" ? err : err?.message || "Request failed");
     } finally {
       setLoading(false);
     }

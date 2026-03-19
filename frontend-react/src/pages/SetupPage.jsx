@@ -51,8 +51,9 @@ export default function SetupPage() {
         navigate("/dashboard", { replace: true });
         return;
       } catch (err) {
-        if (err.message !== "No active enrollment") {
-          setError(err.message || "Failed to check enrollment");
+        const message = typeof err === "string" ? err : err?.message;
+        if (message !== "No active enrollment") {
+          setError(typeof err === "string" ? err : err?.message || "Request failed");
           setLoading(false);
           return;
         }
@@ -62,7 +63,7 @@ export default function SetupPage() {
         const examList = await getExams();
         setExams(examList);
       } catch (err) {
-        setError(err.message || "Failed to load exams");
+        setError(typeof err === "string" ? err : err?.message || "Request failed");
       } finally {
         setLoading(false);
       }
@@ -82,7 +83,7 @@ export default function SetupPage() {
         const detail = await getExamDetail(selectedExamId);
         setSelectedExamDetail(detail);
       } catch (err) {
-        setError(err.message || "Failed to load exam details");
+        setError(typeof err === "string" ? err : err?.message || "Request failed");
         setSelectedExamDetail(null);
       }
     }
@@ -122,7 +123,7 @@ export default function SetupPage() {
       });
       setResult(response);
     } catch (err) {
-      setError(err.message || "Failed to create your plan");
+      setError(typeof err === "string" ? err : err?.message || "Request failed");
     } finally {
       setSubmitting(false);
     }

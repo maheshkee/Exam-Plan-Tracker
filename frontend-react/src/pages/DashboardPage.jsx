@@ -48,7 +48,7 @@ export default function DashboardPage() {
       setDashboard(dashboardData);
       setEnrollments(enrollmentData);
     } catch (err) {
-      setError(err.message || "Failed to load dashboard");
+      setError(typeof err === "string" ? err : err?.message || "Request failed");
     } finally {
       setLoading(false);
       setSwitching(false);
@@ -72,7 +72,7 @@ export default function DashboardPage() {
       await switchExam(enrollmentId);
       await loadDashboard();
     } catch (err) {
-      setError(err.message || "Failed to switch exam");
+      setError(typeof err === "string" ? err : err?.message || "Request failed");
       setSwitching(false);
     }
   }

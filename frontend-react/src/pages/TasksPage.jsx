@@ -91,11 +91,12 @@ export default function TasksPage() {
           }
         }
       } catch (err) {
-        if (err.message === "No active enrollment") {
+        const message = typeof err === "string" ? err : err?.message;
+        if (message === "No active enrollment") {
           navigate("/setup", { replace: true });
           return;
         }
-        setError(err.message || "Failed to load tasks");
+        setError(typeof err === "string" ? err : err?.message || "Request failed");
       } finally {
         setLoading(false);
       }
@@ -116,7 +117,7 @@ export default function TasksPage() {
       const taskList = await getTasks(selectedDate);
       setTasks(taskList || []);
     } catch (err) {
-      setError(err.message || "Failed to load tasks");
+      setError(typeof err === "string" ? err : err?.message || "Request failed");
     } finally {
       setLoading(false);
     }
@@ -155,7 +156,7 @@ export default function TasksPage() {
       });
       await handleLoadTasks();
     } catch (err) {
-      setError(err.message || "Failed to add task");
+      setError(typeof err === "string" ? err : err?.message || "Request failed");
     } finally {
       setSubmitting(false);
     }
@@ -169,7 +170,7 @@ export default function TasksPage() {
       await logTask(taskId, { status: "COMPLETED" });
       await handleLoadTasks();
     } catch (err) {
-      setError(err.message || "Failed to mark task done");
+      setError(typeof err === "string" ? err : err?.message || "Request failed");
     } finally {
       setSubmitting(false);
     }
@@ -183,7 +184,7 @@ export default function TasksPage() {
       await logTask(taskId, { status: "SKIPPED" });
       await handleLoadTasks();
     } catch (err) {
-      setError(err.message || "Failed to skip task");
+      setError(typeof err === "string" ? err : err?.message || "Request failed");
     } finally {
       setSubmitting(false);
     }
