@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from app.config import settings
 from app.routers import auth as auth_router
 from app.routers import exam as exam_router
 from app.routers import task as task_router
@@ -51,7 +52,8 @@ def startup_event():
         Base.metadata.create_all(bind=engine)
         print("✅ Tables created")
         seed_exams()
-        start_scheduler()
+        if settings.ENABLE_SCHEDULER:
+            start_scheduler()
     except Exception as e:
         print("DB INIT ERROR:", e)
 

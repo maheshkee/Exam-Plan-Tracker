@@ -3,7 +3,6 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.user import User
-from app.models.user_exam import UserExam
 from app.schemas.exam import ExamResponse, ExamDetailResponse
 from app.schemas.user_exam import UserExamCreate, UserExamResponse
 from app.utils.dependencies import get_current_user
@@ -25,9 +24,24 @@ def get_my_enrollment(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    user_exam = db.query(UserExam).filter(UserExam.user_id == current_user.id).first()
-    if not user_exam:
-        raise HTTPException(status_code=404, detail="No active enrollment")
+    user_exam = exam_service.get_active_enrollment(db, current_user.id)
+    return exam_service.build_user_exam_response(db, user_exam)
+
+@router.get("/my-enrollments", response_model=List[UserExamResponse])
+def get_my_enrollments(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    enrollments = exam_service.get_all_enrollments(db, current_user.id)
+    return [exam_service.build_user_exam_response(db, enrollment) for enrollment in enrollments]
+
+@router.post("/switch/{user_exam_id}", response_model=UserExamResponse)
+def switch_exam(
+    user_exam_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user_exam = exam_service.switch_active_exam(db, current_user.id, user_exam_id)
     return exam_service.build_user_exam_response(db, user_exam)
 
 @router.get("", response_model=List[ExamResponse])
@@ -40,4 +54,3 @@ def get_exam_detail(exam_id: int, db: Session = Depends(get_db)):
     if not exam:
         raise HTTPException(status_code=404, detail="Exam not found")
     return exam
-

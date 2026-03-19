@@ -26,6 +26,7 @@ class UserExamResponse(BaseModel):
     exam_id: int
     exam_date: date
     study_hours_per_day: float
+    is_active: bool
     created_at: datetime
     days_remaining: int
     total_syllabus_hours: float

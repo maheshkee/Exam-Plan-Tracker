@@ -20,6 +20,7 @@ def test_enroll_success(client, auth_headers, seeded_db):
     assert res.status_code == 201
     data = res.json()
     assert data["exam_id"] == 1
+    assert data["is_active"] is True
     assert data["days_remaining"] > 0
     assert data["total_syllabus_hours"] > 0
 
@@ -32,6 +33,43 @@ def test_my_enrollment(client, auth_headers):
     res = client.get("/exams/my-enrollment", headers=auth_headers)
     assert res.status_code == 200
     assert res.json()["exam_id"] == 1
+    assert res.json()["is_active"] is True
+
+def test_enroll_second_exam_switches_active(client, auth_headers):
+    res = client.post("/exams/enroll", headers=auth_headers,
+        json={"exam_id": 2, "exam_date": "2027-02-01", "study_hours_per_day": 3.5})
+    assert res.status_code == 201
+    data = res.json()
+    assert data["exam_id"] == 2
+    assert data["is_active"] is True
+
+    active = client.get("/exams/my-enrollment", headers=auth_headers)
+    assert active.status_code == 200
+    assert active.json()["exam_id"] == 2
+
+def test_my_enrollments_lists_history(client, auth_headers):
+    res = client.get("/exams/my-enrollments", headers=auth_headers)
+    assert res.status_code == 200
+    data = res.json()
+    assert len(data) == 2
+    assert data[0]["exam_id"] == 2
+    assert data[0]["is_active"] is True
+    assert data[1]["exam_id"] == 1
+    assert data[1]["is_active"] is False
+
+def test_switch_active_exam(client, auth_headers):
+    enrollments = client.get("/exams/my-enrollments", headers=auth_headers).json()
+    original = next(item for item in enrollments if item["exam_id"] == 1)
+
+    res = client.post(f"/exams/switch/{original['id']}", headers=auth_headers)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["exam_id"] == 1
+    assert data["is_active"] is True
+
+    active = client.get("/exams/my-enrollment", headers=auth_headers)
+    assert active.status_code == 200
+    assert active.json()["exam_id"] == 1
 
 def test_enroll_past_date(client, seeded_db):
     client.post("/auth/register", json={"email": "user2@test.com", "password": "password123"})

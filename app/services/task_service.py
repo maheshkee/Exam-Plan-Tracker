@@ -1,5 +1,5 @@
 from datetime import date
-from typing import List, Optional
+from typing import List
 from sqlalchemy.orm import Session, joinedload
 from fastapi import HTTPException
 from app.models.daily_task import DailyTask
@@ -10,10 +10,9 @@ from app.schemas.task import DailyTaskCreate, TaskLogUpdate
 
 def get_user_enrollment(db: Session, user_id: int) -> UserExam:
     """Get enrollment or raise 404."""
-    enrollment = db.query(UserExam).filter(UserExam.user_id == user_id).first()
-    if not enrollment:
-        raise HTTPException(status_code=404, detail="No active enrollment found")
-    return enrollment
+    from app.services.exam_service import get_active_enrollment
+
+    return get_active_enrollment(db, user_id)
 
 def create_daily_task(db: Session, user_id: int, data: DailyTaskCreate) -> DailyTask:
     enrollment = get_user_enrollment(db, user_id)

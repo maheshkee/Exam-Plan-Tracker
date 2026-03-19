@@ -1,20 +1,20 @@
 from datetime import date
-from typing import List, Optional
+from typing import List
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func
-from app.models.user_exam import UserExam
 from app.models.daily_task import DailyTask
 from app.models.task_log import TaskLog
 from app.models.progress_snapshot import ProgressSnapshot
-from app.models.exam import Exam
-from app.models.topic import Topic
 
 
 def get_dashboard_data(db: Session, user_id: int) -> dict:
-    from app.services.task_service import get_user_enrollment
-    from app.services.exam_service import get_exam_with_syllabus, calculate_total_syllabus_hours
+    from app.services.exam_service import (
+        calculate_total_syllabus_hours,
+        get_active_enrollment,
+        get_exam_with_syllabus,
+    )
 
-    enrollment = get_user_enrollment(db, user_id)
+    enrollment = get_active_enrollment(db, user_id)
     exam = get_exam_with_syllabus(db, enrollment.exam_id)
 
     today = date.today()
@@ -90,10 +90,13 @@ def get_dashboard_data(db: Session, user_id: int) -> dict:
 
 
 def generate_end_of_day(db: Session, user_id: int, target_date: date) -> dict:
-    from app.services.task_service import get_user_enrollment
-    from app.services.exam_service import get_exam_with_syllabus, calculate_total_syllabus_hours
+    from app.services.exam_service import (
+        calculate_total_syllabus_hours,
+        get_active_enrollment,
+        get_exam_with_syllabus,
+    )
 
-    enrollment = get_user_enrollment(db, user_id)
+    enrollment = get_active_enrollment(db, user_id)
 
     tasks = db.query(DailyTask)\
         .options(joinedload(DailyTask.task_log))\
@@ -185,8 +188,9 @@ def generate_end_of_day(db: Session, user_id: int, target_date: date) -> dict:
 
 
 def get_progress_history(db: Session, user_id: int) -> List[ProgressSnapshot]:
-    from app.services.task_service import get_user_enrollment
-    enrollment = get_user_enrollment(db, user_id)
+    from app.services.exam_service import get_active_enrollment
+
+    enrollment = get_active_enrollment(db, user_id)
     return db.query(ProgressSnapshot)\
         .filter(ProgressSnapshot.user_exam_id == enrollment.id)\
         .order_by(ProgressSnapshot.snapshot_date.desc())\

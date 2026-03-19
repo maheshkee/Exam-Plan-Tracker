@@ -5,6 +5,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
+    ENABLE_SCHEDULER: bool = False
     EMAIL_HOST: str
     EMAIL_PORT: int
     EMAIL_USERNAME: str
