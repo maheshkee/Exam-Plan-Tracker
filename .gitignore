@@ -8,3 +8,4 @@ venv/
 !alembic/versions/.gitkeep
 server.log
 test.db
+.aider*
