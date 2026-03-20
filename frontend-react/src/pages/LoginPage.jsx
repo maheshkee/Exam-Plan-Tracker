@@ -60,16 +60,14 @@ export default function LoginPage() {
         return;
       }
 
+      const timeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("timeout")), 5000)
+      );
+
       try {
-        await getActiveEnrollment();
+        await Promise.race([getActiveEnrollment(), timeout]);
         navigate("/dashboard", { replace: true });
       } catch (err) {
-        if (err.message === "No active enrollment") {
-          navigate("/setup", { replace: true });
-          return;
-        }
-        setError(err.message || "Unable to verify your session");
-      } finally {
         setLoading(false);
       }
     }
