@@ -51,7 +51,7 @@ export default function DashboardPage() {
       setDashboard(dashboardData);
       setEnrollments(enrollmentData);
       setExamNamesById(
-        Object.fromEntries((exams || []).map((exam) => [exam.id, exam.name]))
+        Object.fromEntries((exams || []).map((exam) => [Number(exam.id), exam.name]))
       );
     } catch (err) {
       setError(err?.message || String(err) || "Request failed");
@@ -90,7 +90,7 @@ export default function DashboardPage() {
   function getEnrollmentExamName(enrollment) {
     if (enrollment.exam_name) return enrollment.exam_name;
     if (enrollment.is_active && dashboard?.exam_name) return dashboard.exam_name;
-    return examNamesById[enrollment.exam_id] || `Exam #${enrollment.exam_id}`;
+    return examNamesById[Number(enrollment.exam_id)] || `Exam #${enrollment.exam_id}`;
   }
 
   return (
