@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   getDashboard,
   getAllEnrollments,
+  getExams,
   switchExam,
 } from "../services/api";
 import PageLayout from "../components/PageLayout";
@@ -31,6 +32,7 @@ export default function DashboardPage() {
   const [error, setError] = useState("");
   const [dashboard, setDashboard] = useState(null);
   const [enrollments, setEnrollments] = useState([]);
+  const [examNamesById, setExamNamesById] = useState({});
 
   useEffect(() => {
     loadDashboard();
@@ -41,14 +43,18 @@ export default function DashboardPage() {
     setError("");
 
     try {
-      const [dashboardData, enrollmentData] = await Promise.all([
+      const [dashboardData, enrollmentData, exams] = await Promise.all([
         getDashboard(),
         getAllEnrollments(),
+        getExams(),
       ]);
       setDashboard(dashboardData);
       setEnrollments(enrollmentData);
+      setExamNamesById(
+        Object.fromEntries((exams || []).map((exam) => [exam.id, exam.name]))
+      );
     } catch (err) {
-      setError(typeof err === "string" ? err : err?.message || "Request failed");
+      setError(err?.message || String(err) || "Request failed");
     } finally {
       setLoading(false);
       setSwitching(false);
@@ -72,7 +78,7 @@ export default function DashboardPage() {
       await switchExam(enrollmentId);
       await loadDashboard();
     } catch (err) {
-      setError(typeof err === "string" ? err : err?.message || "Request failed");
+      setError(err?.message || String(err) || "Request failed");
       setSwitching(false);
     }
   }
@@ -80,6 +86,12 @@ export default function DashboardPage() {
   const completionWidth = dashboard
     ? `${Math.max(0, Math.min(100, dashboard.completion_percentage))}%`
     : "0%";
+
+  function getEnrollmentExamName(enrollment) {
+    if (enrollment.exam_name) return enrollment.exam_name;
+    if (enrollment.is_active && dashboard?.exam_name) return dashboard.exam_name;
+    return examNamesById[enrollment.exam_id] || `Exam #${enrollment.exam_id}`;
+  }
 
   return (
     <PageLayout>
@@ -198,7 +210,7 @@ export default function DashboardPage() {
                 >
                   <div>
                     <p style={{ fontWeight: 600, marginBottom: 4 }}>
-                      Exam #{enrollment.exam_id}
+                      {getEnrollmentExamName(enrollment)}
                     </p>
                     <p style={{ fontSize: 13, color: "var(--gray-500)" }}>
                       Exam date: {enrollment.exam_date}

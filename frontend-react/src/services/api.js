@@ -35,10 +35,13 @@ export async function apiFetch(path, options = {}) {
 
   const data = await res.json();
   if (!res.ok) {
-    const detail = typeof data.detail === "string"
-      ? data.detail
-      : JSON.stringify(data.detail) || "Request failed";
-    throw new Error(detail);
+    const detail = data.detail;
+    const msg = typeof detail === "string"
+      ? detail
+      : Array.isArray(detail)
+      ? detail[0]?.msg || "Request failed"
+      : "Request failed";
+    throw new Error(msg);
   }
   return data;
 }

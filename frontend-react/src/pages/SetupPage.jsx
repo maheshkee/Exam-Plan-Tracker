@@ -53,7 +53,7 @@ export default function SetupPage() {
       } catch (err) {
         const message = typeof err === "string" ? err : err?.message;
         if (message !== "No active enrollment") {
-          setError(typeof err === "string" ? err : err?.message || "Request failed");
+          setError(err?.message || String(err) || "Request failed");
           setLoading(false);
           return;
         }
@@ -63,7 +63,7 @@ export default function SetupPage() {
         const examList = await getExams();
         setExams(examList);
       } catch (err) {
-        setError(typeof err === "string" ? err : err?.message || "Request failed");
+        setError(err?.message || String(err) || "Request failed");
       } finally {
         setLoading(false);
       }
@@ -83,7 +83,7 @@ export default function SetupPage() {
         const detail = await getExamDetail(selectedExamId);
         setSelectedExamDetail(detail);
       } catch (err) {
-        setError(typeof err === "string" ? err : err?.message || "Request failed");
+        setError(err?.message || String(err) || "Request failed");
         setSelectedExamDetail(null);
       }
     }
@@ -123,7 +123,7 @@ export default function SetupPage() {
       });
       setResult(response);
     } catch (err) {
-      setError(typeof err === "string" ? err : err?.message || "Request failed");
+      setError(err?.message || String(err) || "Request failed");
     } finally {
       setSubmitting(false);
     }

@@ -96,7 +96,7 @@ export default function TasksPage() {
           navigate("/setup", { replace: true });
           return;
         }
-        setError(typeof err === "string" ? err : err?.message || "Request failed");
+        setError(err?.message || String(err) || "Request failed");
       } finally {
         setLoading(false);
       }
@@ -117,7 +117,7 @@ export default function TasksPage() {
       const taskList = await getTasks(selectedDate);
       setTasks(taskList || []);
     } catch (err) {
-      setError(typeof err === "string" ? err : err?.message || "Request failed");
+      setError(err?.message || String(err) || "Request failed");
     } finally {
       setLoading(false);
     }
@@ -156,7 +156,7 @@ export default function TasksPage() {
       });
       await handleLoadTasks();
     } catch (err) {
-      setError(typeof err === "string" ? err : err?.message || "Request failed");
+      setError(err?.message || String(err) || "Request failed");
     } finally {
       setSubmitting(false);
     }
@@ -170,7 +170,7 @@ export default function TasksPage() {
       await logTask(taskId, { status: "COMPLETED" });
       await handleLoadTasks();
     } catch (err) {
-      setError(typeof err === "string" ? err : err?.message || "Request failed");
+      setError(err?.message || String(err) || "Request failed");
     } finally {
       setSubmitting(false);
     }
@@ -184,7 +184,7 @@ export default function TasksPage() {
       await logTask(taskId, { status: "SKIPPED" });
       await handleLoadTasks();
     } catch (err) {
-      setError(typeof err === "string" ? err : err?.message || "Request failed");
+      setError(err?.message || String(err) || "Request failed");
     } finally {
       setSubmitting(false);
     }

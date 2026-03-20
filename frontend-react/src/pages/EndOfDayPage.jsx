@@ -57,7 +57,7 @@ export default function EndOfDayPage() {
       const summary = await submitEndOfDay(targetDate);
       setResult(summary);
     } catch (err) {
-      setError(typeof err === "string" ? err : err?.message || "Request failed");
+      setError(err?.message || String(err) || "Request failed");
     } finally {
       setLoading(false);
     }
